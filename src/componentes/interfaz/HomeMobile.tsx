@@ -143,7 +143,7 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
             {STOCK_PRODUCTOS[categoriaAbierta]?.map((prod, idx) => (
               <div 
                 key={idx} 
-                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#18181b', p: '16px', padding: '16px', borderRadius: '14px', border: '1px solid #27272a' }}
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#18181b', padding: '16px', borderRadius: '14px', border: '1px solid #27272a' }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <p style={{ fontWeight: 'bold', fontSize: '14px', color: '#e4e4e7', margin: 0 }}>{prod.nombre}</p>

@@ -9,6 +9,14 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
   onSeleccionarCategoria,
   onAbrirCheckout,
 }) => {
+  const manejarErrorImagen = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    // Corrección estricta de tipos para TypeScript
+    const elementoImg = e.currentTarget as HTMLImageElement;
+    if (!elementoImg.src.endsWith('.png')) {
+      elementoImg.src = '/assets/barra-mobile.png';
+    }
+  };
+
   return (
     <div 
       style={{
@@ -37,9 +45,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
           display: 'block',
           zIndex: 1
         }}
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/assets/barra-mobile.png';
-        }}
+        onError={manejarErrorImagen}
       />
 
       {/* --- BOTONES INVISIBLES SOBRE LA IMAGEN --- */}
