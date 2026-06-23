@@ -19,163 +19,218 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
   cartItems,
   onVaciarCarrito 
 }) => {
-  const [paso, setPaso] = useState<'revision' | 'envio' | 'pago'>('revision');
+  const [paso, setPaso] = useState<1 | 2>(1);
+  const [tipoEntrega, setTipoEntrega] = useState<'envio' | 'retiro'>('envio');
+  
+  // Formulario Datos Personales
+  const [nombreUsuario, setNombreUsuario] = useState('');
   const [direccion, setDireccion] = useState('');
-  const [metodoPago, setMetodoPago] = useState('');
+  const [conCuantoPaga, setConCuantoPaga] = useState('');
 
   if (!isOpen) return null;
 
   const total = cartItems.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
   const manejarFinalizarPedido = () => {
-    alert('¡Pedido Procesado Exitosamente! El robot ya está preparando tu entrega.');
+    alert(`¡Pedido Confirmado!\n\nCliente: ${nombreUsuario}\nModo: ${tipoEntrega === 'envio' ? 'Envío a ' + direccion : 'Retiro en el local'}\nPaga con: ${conCuantoPaga}\nTotal: $${total}`);
     onVaciarCarrito();
-    setPaso('revision');
+    setPaso(1);
+    setNombreUsuario('');
     setDireccion('');
-    setMetodoPago('');
+    setConCuantoPaga('');
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex flex-col justify-end animate-fade-in">
-      {/* Backdrop clickeable para cerrar el modal */}
-      <div className="absolute inset-0 -z-10" onClick={onClose} />
-
-      <div className="bg-[#0f0f11] text-white rounded-t-3xl max-h-[85vh] overflow-y-auto p-6 border-t border-zinc-800 flex flex-col gap-4 shadow-2xl">
-        
-        {/* Encabezado dinámico */}
-        <div className="flex justify-between items-center pb-3 border-b border-zinc-800">
-          <h3 className="text-xl font-black tracking-wide text-zinc-100 flex items-center gap-2">
-            {paso === 'revision' && '🛒 Tu Pedido'}
-            {paso === 'envio' && '📍 Ubicación de Envío'}
-            {paso === 'pago' && '💳 Confirmar Pago'}
+    <div 
+      style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(4px)',
+        zIndex: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '16px',
+        boxSizing: 'border-box'
+      }}
+    >
+      {/* 📦 CUADRO FLOTANTE QUE OCUPA BASTANTE PANTALLA */}
+      <div 
+        style={{
+          width: '100%',
+          backgroundColor: '#121214',
+          borderRadius: '24px',
+          border: '1px solid #27272a',
+          color: 'white',
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          maxHeight: '90%',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
+        }}
+      >
+        {/* Cabecera */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #27272a', paddingBottom: '10px' }}>
+          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {paso === 1 ? '🛒 REVISIÓN' : '📝 DATOS DE PAGO'}
           </h3>
           <button 
-            onClick={onClose} 
-            className="text-zinc-400 hover:text-white bg-zinc-900 px-3 py-1 rounded-lg text-xs font-bold transition-colors"
+            onClick={onClose}
+            style={{ backgroundColor: '#27272a', border: 'none', color: '#e4e4e7', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
           >
             Cerrar
           </button>
         </div>
 
-        {/* PASO 1: REVISIÓN DE PRODUCTOS */}
-        {paso === 'revision' && (
-          <div className="flex flex-col gap-4">
-            <div className="overflow-y-auto max-h-[35vh] space-y-2 pr-1">
+        {/* PASO 1: PRODUCTOS Y OPCIÓN DE ENTREGA */}
+        {paso === 1 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', flex: 1 }}>
+            <div style={{ overflowY: 'auto', maxHeight: '200px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {cartItems.length === 0 ? (
-                <div className="text-center py-8">
-                  <p className="text-zinc-500 text-sm">La caja registradora está vacía.</p>
-                  <p className="text-zinc-600 text-xs mt-1">Tocá las heladeras o la vitrina para sumar productos.</p>
+                <div style={{ textAlign: 'center', color: '#71717a', padding: '20px 0', fontSize: '14px' }}>
+                  La caja registradora está vacía.<br/>Tocá la barra para sumar productos.
                 </div>
               ) : (
                 cartItems.map((item, idx) => (
-                  <div key={idx} className="flex justify-between items-center bg-zinc-900/60 p-3.5 rounded-xl border border-zinc-800/80">
-                    <div className="flex flex-col">
-                      <span className="font-semibold text-sm text-zinc-200">{item.nombre}</span>
-                      <span className="text-xs text-zinc-500">${item.precio} c/u</span>
-                    </div>
-                    <span className="font-bold text-sm text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-lg">
-                      x{item.cantidad} — ${item.precio * item.cantidad}
-                    </span>
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#18181b', padding: '10px 14px', borderRadius: '12px', border: '1px solid #27272a' }}>
+                    <span style={{ fontSize: '14px', fontWeight: '500' }}>{item.nombre} (x{item.cantidad})</span>
+                    <span style={{ fontSize: '14px', fontWeight: 'bold', color: '#10b981' }}>${item.precio * item.cantidad}</span>
                   </div>
                 ))
               )}
             </div>
 
-            {cartItems.length > 0 && (
-              <div className="flex justify-between items-center p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-                <span className="text-sm text-zinc-400 font-medium">Subtotal a pagar:</span>
-                <span className="text-lg font-black text-zinc-100">${total}</span>
+            {/* Selector de opciones: Envío o Retiro */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Opciones de entrega:</span>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  onClick={() => setTipoEntrega('envio')}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    borderRadius: '12px',
+                    fontWeight: 'bold',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    border: tipoEntrega === 'envio' ? '2px solid #dc2626' : '1px solid #27272a',
+                    backgroundColor: tipoEntrega === 'envio' ? 'rgba(220, 38, 38, 0.1)' : '#18181b',
+                    color: tipoEntrega === 'envio' ? '#ffffff' : '#a1a1aa',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  📍 Envíomelo
+                </button>
+                <button
+                  onClick={() => setTipoEntrega('retiro')}
+                  style={{
+                    flex: 1,
+                    padding: '12px',
+                    borderRadius: '12px',
+                    fontWeight: 'bold',
+                    fontSize: '13px',
+                    cursor: 'pointer',
+                    border: tipoEntrega === 'retiro' ? '2px solid #dc2626' : '1px solid #27272a',
+                    backgroundColor: tipoEntrega === 'retiro' ? 'rgba(220, 38, 38, 0.1)' : '#18181b',
+                    color: tipoEntrega === 'retiro' ? '#ffffff' : '#a1a1aa',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  🏪 Retiro en Local
+                </button>
               </div>
-            )}
-            
-            <button 
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #27272a', marginTop: '4px' }}>
+              <span style={{ color: '#a1a1aa', fontSize: '14px' }}>Total actual:</span>
+              <span style={{ fontWeight: '900', fontSize: '16px', color: '#10b981' }}>${total}</span>
+            </div>
+
+            <button
               disabled={cartItems.length === 0}
-              onClick={() => setPaso('envio')}
-              className="w-full bg-red-600 hover:bg-red-700 disabled:bg-zinc-800 disabled:text-zinc-600 py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all mt-2 shadow-[0_0_20px_rgba(220,38,38,0.2)] text-sm"
+              onClick={() => setPaso(2)}
+              style={{ width: '100%', backgroundColor: '#dc2626', border: 'none', color: 'white', padding: '14px', borderRadius: '12px', fontWeight: 'bold', fontSize: '14px', cursor: cartItems.length === 0 ? 'not-allowed' : 'pointer', opacity: cartItems.length === 0 ? 0.5 : 1, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '6px' }}
             >
-              Siguiente: Configurar Envío
+              Siguiente: Datos Personales
             </button>
           </div>
         )}
 
-        {/* PASO 2: DIRECCIÓN Y COORDENADAS */}
-        {paso === 'envio' && (
-          <div className="flex flex-col gap-4">
-            <div>
-              <label className="block text-xs text-zinc-400 uppercase font-bold mb-2 tracking-wider">Dirección de Entrega</label>
+        {/* PASO 2: FORMULARIO STRING */}
+        {paso === 2 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {/* Input Nombre */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Nombre y Apellido</label>
               <input 
                 type="text" 
-                placeholder="Ej: Av. Colón 1234, Barrio Centro" 
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-red-500 placeholder-zinc-600 transition-colors"
+                placeholder="Ej: Juan Cruz" 
+                value={nombreUsuario}
+                onChange={(e) => setNombreUsuario(e.target.value)}
+                style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
               />
             </div>
 
-            <div className="w-full h-36 bg-zinc-900/40 rounded-xl flex flex-col items-center justify-center text-zinc-500 text-xs border border-dashed border-zinc-800 gap-2">
-              <span className="text-2xl">🗺️</span>
-              <p className="font-medium text-zinc-400">Geolocalización Activa</p>
-              <p className="text-zinc-600 px-4 text-center">Mapeando ruta de entrega óptima desde el bar.</p>
+            {/* Input Dirección Condicional (solo si es Envío) */}
+            {tipoEntrega === 'envio' && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Dirección de Envío</label>
+                <input 
+                  type="text" 
+                  placeholder="Ej: Av. Colón 1234, Barrio Centro" 
+                  value={direccion}
+                  onChange={(e) => setDireccion(e.target.value)}
+                  style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
+                />
+              </div>
+            )}
+
+            {/* Input Con cuánto paga */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>¿Con cuánto vas a pagar?</label>
+              <input 
+                type="text" 
+                placeholder="Ej: Pago con $15000 o Mercado Pago" 
+                value={conCuantoPaga}
+                onChange={(e) => setConCuantoPaga(e.target.value)}
+                style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
+              />
             </div>
 
-            <div className="flex gap-3 mt-2">
+            {/* Acciones del Paso 2 */}
+            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button 
-                onClick={() => setPaso('revision')} 
-                className="w-1/3 bg-zinc-900 border border-zinc-800 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-800 transition-colors"
+                onClick={() => setPaso(1)}
+                style={{ flex: 1, backgroundColor: '#27272a', border: 'none', color: 'white', padding: '14px', borderRadius: '12px', fontWeight: 'bold', fontSize: '14px', cursor: 'pointer' }}
               >
                 Volver
               </button>
               <button 
-                disabled={!direccion.trim()}
-                onClick={() => setPaso('pago')} 
-                className="w-2/3 bg-red-600 hover:bg-red-700 disabled:bg-zinc-800 disabled:text-zinc-600 py-3.5 rounded-xl font-bold uppercase tracking-wider text-sm transition-all"
-              >
-                Continuar al Pago
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* PASO 3: PASARELA DE PAGO */}
-        {paso === 'pago' && (
-          <div className="flex flex-col gap-4">
-            <div className="bg-zinc-900/80 border border-zinc-800 p-4 rounded-xl space-y-2 text-xs text-zinc-400">
-              <p className="flex justify-between"><span className="font-semibold text-zinc-500">📍 Destino:</span> <span className="text-zinc-200 font-medium">{direccion}</span></p>
-              <p className="flex justify-between items-center pt-2 border-t border-zinc-800/60"><span className="font-semibold text-zinc-500">💵 Total del Delivery:</span> <span className="text-emerald-400 font-bold text-sm">${total}</span></p>
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-xs text-zinc-400 uppercase font-bold tracking-wider">Seleccionar Método</label>
-              <select 
-                value={metodoPago} 
-                onChange={(e) => setMetodoPago(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors appearance-none cursor-pointer"
-              >
-                <option value="" disabled className="text-zinc-600">Elegí cómo abonar...</option>
-                <option value="mp">Mercado Pago (Alias / Transferencia inmediata)</option>
-                <option value="efectivo">Efectivo (Pago exacto al repartidor)</option>
-              </select>
-            </div>
-
-            <div className="flex gap-3 mt-4">
-              <button 
-                onClick={() => setPaso('envio')} 
-                className="w-1/3 bg-zinc-900 border border-zinc-800 py-3.5 rounded-xl font-bold text-sm hover:bg-zinc-800 transition-colors"
-              >
-                Volver
-              </button>
-              <button 
-                disabled={!metodoPago}
+                disabled={!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()}
                 onClick={manejarFinalizarPedido}
-                className="w-2/3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-600 text-black py-3.5 rounded-xl font-black uppercase tracking-widest text-sm transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+                style={{ 
+                  flex: 2, 
+                  backgroundColor: '#10b981', 
+                  border: 'none', 
+                  color: 'black', 
+                  padding: '14px', 
+                  borderRadius: '12px', 
+                  fontWeight: '900', 
+                  fontSize: '14px', 
+                  textTransform: 'uppercase',
+                  cursor: (!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()) ? 'not-allowed' : 'pointer',
+                  opacity: (!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()) ? 0.5 : 1
+                }}
               >
-                Confirmar Orden
+                Pedir a la Barra
               </button>
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
