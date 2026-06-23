@@ -78,22 +78,27 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
         backgroundColor: '#09090b',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
+        overflowY: 'auto',        // 🚀 Desplazamiento Vertical
+        overflowX: 'auto',        // 🚀 NUEVO: Desplazamiento Horizontal libre en la web
+        WebkitOverflowScrolling: 'touch', // Scroll nativo táctil para iOS
         padding: '16px',
+        paddingBottom: '60px',
         boxSizing: 'border-box'
       }}
     >
-      {/* 📱 CONTENEDOR CON RELACIÓN DE ASPECTO INMUTABLE */}
+      {/* 📱 CONTENEDOR ENLACE CON DESPLAZAMIENTO INTEGRAL */}
       <div 
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '400px',
-          height: 'calc(100vh - 40px)',
-          maxHeight: '800px',
+          maxWidth: '430px',      // Ancho máximo ideal de smartphone moderno
+          height: 'auto',
+          aspectRatio: '9/16',
           display: 'flex',
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
+          marginTop: '10px'
         }}
       >
         <CuadriculaHeladeras 
