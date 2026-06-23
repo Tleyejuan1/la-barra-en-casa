@@ -30,6 +30,19 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
     }
   };
 
+  // 🛒 Función esencial para sumar artículos y acumular precios en tu carrito original
+  const manejarAgregarAlCarrito = (nombre: string, precio: number) => {
+    setCarrito((prevCarrito) => {
+      const existe = prevCarrito.find((item) => item.nombre === nombre);
+      if (existe) {
+        return prevCarrito.map((item) =>
+          item.nombre === nombre ? { ...item, cantidad: item.cantidad + 1 } : item
+        );
+      }
+      return [...prevCarrito, { nombre, precio, cantidad: 1 }];
+    });
+  };
+
   const manejarVaciarCarrito = () => setCarrito([]);
 
   return (
@@ -63,10 +76,12 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
           marginTop: '10px'
         }}
       >
-        {/* Tu barra original con la lógica de apertura de heladeras real */}
+        {/* Tu barra original con los enlaces de interacción vinculados */}
         <CuadriculaHeladeras 
           onSeleccionarCategoria={(cat) => cambiarCategoria(cat)}
           onAbrirCheckout={() => setCheckoutAbierto(true)}
+          // @ts-ignore (Agregalo si tu interfaz de CuadriculaProps todavía no espera esta prop)
+          onAgregarAlCarrito={manejarAgregarAlCarrito}
         />
 
         {/* Tu carrito mobile original */}
