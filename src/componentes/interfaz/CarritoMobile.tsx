@@ -123,7 +123,7 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
                     transition: 'all 0.2s'
                   }}
                 >
-                  📍 Envíomelo
+                  📍 Envío
                 </button>
                 <button
                   onClick={() => setTipoEntrega('retiro')}

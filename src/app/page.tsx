@@ -35,15 +35,19 @@ function ContenidoHome() {
   const titulos: Record<string, string> = { 
     alcohol: 'ALCOHOL', 
     aperitivos: 'APERITIVOS', 
-    gaseosas: 'SIN ALCOHOL', 
-    snacks: 'BAJÓN' 
+    gaseosas: 'SIN ALCOHOL',
+    'sin-alcohol': 'SIN ALCOHOL', // ✨ Mapeo para los botones 1 y 2
+    snacks: 'BAJÓN', 
+    bajon: 'BAJÓN'                // ✨ Mapeo para los botones 1 y 2
   };
   
   const neones: Record<string, string> = { 
     alcohol: 'rgba(239, 68, 68, 0.8)', 
     aperitivos: 'rgba(249, 115, 22, 0.8)', 
     gaseosas: 'rgba(6, 182, 212, 0.8)', 
-    snacks: 'rgba(234, 179, 8, 0.8)' 
+    'sin-alcohol': 'rgba(6, 182, 212, 0.8)', // ✨ Color cyan para sin alcohol
+    snacks: 'rgba(234, 179, 8, 0.8)',
+    bajon: 'rgba(234, 179, 8, 0.8)'           // ✨ Color amarillo para el bajón
   };
 
   return (
