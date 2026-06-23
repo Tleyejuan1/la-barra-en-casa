@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import HomeDesktop from '../componentes/interfaz/HomeDesktop';
-import HomeMobile from '../componentes/interfaz/HomeMobile';
+
+// 🔥 IMPORTACIÓN CORREGIDA: Un solo '../' para salir de app, y con llaves {}
+import { HomeMobile } from '../componentes/interfaz/HomeMobile';
+
 import Heladera from '../componentes/dispenser/Heladera';
 import ChatBarman from '../componentes/interfaz/ChatBarman';
 import { ProveedorCarrito } from './carrito/ContextoCarrito';
@@ -59,13 +62,11 @@ function ContenidoHome() {
           neones={neones} 
         />
       ) : (
-        <HomeDesktop 
-          setHeladeraAbierta={setHeladeraAbierta} 
-          setChatAbierto={setChatAbierto}
-          hoverActivo={hoverActivo}
-          setHoverActivo={setHoverActivo}
-          neones={neones}
-        />
+        <HomeMobile 
+  setHeladeraAbierta={setHeladeraAbierta} 
+  setChatAbierto={setChatAbierto} 
+  neones={neones} 
+/>
       )}
 
       {/* CHAT BARMAN (Compartido) */}
