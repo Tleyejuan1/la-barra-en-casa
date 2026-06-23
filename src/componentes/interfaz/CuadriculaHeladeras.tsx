@@ -13,7 +13,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
     <div className="relative w-full h-full max-w-[500px] aspect-[9/16] overflow-hidden select-none bg-black shadow-2xl">
       {/* Imagen de fondo definitiva del bar con el bot simpático */}
       <img 
-        src="/assets/bg-barra-casa.png" 
+        src="/assets/barra-mobile.jpg" 
         alt="La Barra En Casa" 
         className="absolute inset-0 w-full h-full object-cover"
       />
