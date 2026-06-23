@@ -3,7 +3,8 @@ export interface Producto {
   nombre: string;
   precio: number;
   imagen: string;
-  heladeraTipo: 'alcohol' | 'aperitivos' | 'gaseosas' | 'snacks';
+  // Soportamos ambos formatos para que no rompa nada en ninguna vista
+  heladeraTipo: 'alcohol' | 'aperitivos' | 'gaseosas' | 'sin-alcohol' | 'snacks' | 'bajon';
   estante: number;
 }
 
@@ -66,7 +67,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Coca-Cola Original 1.5L', 
     precio: 2500, 
     imagen: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'gaseosas', 
+    heladeraTipo: 'sin-alcohol', // Alineado con mobile
     estante: 1 
   },
   { 
@@ -74,7 +75,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Sprite Lima Limón Lata', 
     precio: 1100, 
     imagen: 'https://images.unsplash.com/photo-1625772299847-291528574763?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'gaseosas', 
+    heladeraTipo: 'sin-alcohol', // Alineado con mobile
     estante: 2 
   },
   { 
@@ -82,7 +83,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Agua Mineral Con Gas', 
     precio: 950, 
     imagen: 'https://images.unsplash.com/photo-1608885898957-a599fb18de37?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'gaseosas', 
+    heladeraTipo: 'sin-alcohol', // Alineado con mobile
     estante: 3 
   },
 
@@ -92,7 +93,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Papas Lays Clásicas', 
     precio: 2100, 
     imagen: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'snacks', 
+    heladeraTipo: 'bajon', // Alineado con mobile
     estante: 1 
   },
   { 
@@ -100,7 +101,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Doritos Queso Nacho', 
     precio: 2300, 
     imagen: 'https://images.unsplash.com/photo-1599490659223-e1b69494db53?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'snacks', 
+    heladeraTipo: 'bajon', // Alineado con mobile
     estante: 2 
   },
   { 
@@ -108,7 +109,7 @@ export const LISTA_PRODUCTOS: Producto[] = [
     nombre: 'Pringles Originales', 
     precio: 3400, 
     imagen: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?auto=format&fit=crop&w=200&q=80', 
-    heladeraTipo: 'snacks', 
+    heladeraTipo: 'bajon', // Alineado con mobile
     estante: 3 
   }
 ];
