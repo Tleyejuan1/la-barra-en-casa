@@ -10,50 +10,72 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
   onAbrirCheckout,
 }) => {
   return (
-    <div className="relative w-full h-full max-w-[500px] aspect-[9/16] overflow-hidden select-none bg-black shadow-2xl">
-      {/* Imagen de fondo definitiva del bar con el bot simpático */}
+    <div 
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        aspectRatio: '9/16',
+        overflow: 'hidden',
+        userSelect: 'none',
+        backgroundColor: '#09090b',
+        borderRadius: '32px',
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+        border: '1px solid #27272a'
+      }}
+    >
+      {/* 📸 Imagen de fondo adaptada */}
       <img 
         src="/assets/barra-mobile.jpg" 
         alt="La Barra En Casa" 
-        className="absolute inset-0 w-full h-full object-cover"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          display: 'block',
+          zIndex: 1
+        }}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/assets/barra-mobile.png';
+        }}
       />
 
-      {/* --- ZONAS INTERACTIVAS DEL MOSTRADOR --- */}
+      {/* --- BOTONES INVISIBLES SOBRE LA IMAGEN --- */}
       
-      {/* Vitrina de Cigarrillos (Extremo izquierdo sobre la barra) */}
+      {/* Vitrina de Cigarrillos */}
       <button
         onClick={() => onSeleccionarCategoria('cigarrillos')}
-        className="absolute top-[49%] left-[4%] w-[25%] h-[11%] opacity-0 active:bg-white/10 transition-all rounded-md cursor-pointer z-10"
+        style={{ position: 'absolute', top: '49%', left: '4%', width: '25%', height: '11%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
         aria-label="Ver Cigarrillos"
       />
 
-      {/* Pantalla Táctil / Caja Registradora "PAGAR" (Extremo derecho sobre la barra) */}
+      {/* Caja Registradora "PAGAR" */}
       <button
         onClick={onAbrirCheckout}
-        className="absolute top-[48%] right-[3%] w-[26%] h-[14%] opacity-0 active:bg-white/10 transition-all rounded-md cursor-pointer z-10"
+        style={{ position: 'absolute', top: '48%', right: '3%', width: '26%', height: '14%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
         aria-label="Ir al Checkout"
       />
 
-      {/* --- HELADERAS INFERIORES UNDER-COUNTER --- */}
-      
-      {/* Heladera ALCOHOL (Izquierda) */}
+      {/* Heladera ALCOHOL */}
       <button
         onClick={() => onSeleccionarCategoria('alcohol')}
-        className="absolute bottom-[3%] left-[5%] w-[28%] h-[27%] opacity-0 active:bg-white/10 transition-all rounded-b-lg cursor-pointer z-10"
+        style={{ position: 'absolute', bottom: '3%', left: '5%', width: '28%', height: '27%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
         aria-label="Ver Heladera Alcohol"
       />
 
-      {/* Heladera COMBOS (Centro) */}
+      {/* Heladera COMBOS */}
       <button
         onClick={() => onSeleccionarCategoria('combos')}
-        className="absolute bottom-[3%] left-[36%] w-[28%] h-[27%] opacity-0 active:bg-white/10 transition-all rounded-b-lg cursor-pointer z-10"
+        style={{ position: 'absolute', bottom: '3%', left: '36%', width: '28%', height: '27%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
         aria-label="Ver Heladera Combos"
       />
 
-      {/* Heladera APERITIVOS (Derecha) */}
+      {/* Heladera APERITIVOS */}
       <button
         onClick={() => onSeleccionarCategoria('aperitivos')}
-        className="absolute bottom-[3%] right-[5%] w-[28%] h-[27%] opacity-0 active:bg-white/10 transition-all rounded-b-lg cursor-pointer z-10"
+        style={{ position: 'absolute', bottom: '3%', right: '5%', width: '28%', height: '27%', opacity: 0, cursor: 'pointer', zIndex: 10 }}
         aria-label="Ver Heladera Aperitivos"
       />
     </div>

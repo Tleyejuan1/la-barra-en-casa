@@ -71,18 +71,36 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
   const manejarVaciarCarrito = () => setCarrito([]);
 
   return (
-    // Contenedor padre que centra el "teléfono" simulado en la pantalla
-    <div className="w-full min-h-screen bg-[#09090b] flex justify-center items-center p-4 overflow-hidden font-sans select-none">
-      
-      {/* 📱 CAJA CON TAMAÑO REAL DE CELULAR */}
-      <div className="relative w-full max-w-[410px] h-[88vh] max-h-[850px] bg-black rounded-[40px] shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-zinc-800 overflow-hidden flex justify-center items-center">
-        
+    <div 
+      style={{
+        width: '100vw',
+        minHeight: '100vh',
+        backgroundColor: '#09090b',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '16px',
+        boxSizing: 'border-box'
+      }}
+    >
+      {/* 📱 CONTENEDOR CON RELACIÓN DE ASPECTO INMUTABLE */}
+      <div 
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '400px',
+          height: 'calc(100vh - 40px)',
+          maxHeight: '800px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
         <CuadriculaHeladeras 
           onSeleccionarCategoria={(cat) => cambiarCategoria(cat)}
           onAbrirCheckout={() => setCheckoutAbierto(true)}
         />
 
-        {/* El flujo de pago se renderiza acoplado al contenedor del celu */}
         <CarritoMobile 
           isOpen={checkoutAbierto}
           onClose={() => setCheckoutAbierto(false)}
@@ -91,37 +109,49 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
         />
       </div>
 
-      {/* CATÁLOGO MODAL (Queda flotando a pantalla completa para cómoda lectura) */}
+      {/* CATÁLOGO MODAL */}
       {categoriaAbierta && (
-        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md p-6 flex flex-col justify-start text-white">
-          <div className="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
-            <div className="flex flex-col">
-              <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Catálogo Disponible</span>
-              <h2 className="text-2xl font-black uppercase tracking-wider text-red-500 drop-shadow-[0_0_10px_rgba(220,38,38,0.4)]">
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            backgroundColor: 'rgba(0, 0, 0, 0.95)',
+            backdropFilter: 'blur(8px)',
+            padding: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            color: 'white'
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', borderBottom: '1px solid #27272a', paddingBottom: '16px' }}>
+            <div>
+              <span style={{ fontSize: '12px', color: '#71717a', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Catálogo Disponible</span>
+              <h2 style={{ fontSize: '24px', fontWeight: '900', textTransform: 'uppercase', color: '#ef4444' }}>
                 {categoriaAbierta === 'cigarrillos' ? '🚬 Cigarrillos' : `🍾 ${categoriaAbierta}`}
               </h2>
             </div>
             <button 
               onClick={() => cambiarCategoria(null)} 
-              className="bg-zinc-900 border border-zinc-800 text-zinc-200 px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-zinc-800 transition-colors uppercase tracking-wide cursor-pointer"
+              style={{ backgroundColor: '#18181b', border: '1px solid #27272a', color: '#e4e4e7', padding: '10px 16px', borderRadius: '12px', fontWeight: 'bold', fontSize: '12px', cursor: 'pointer', textTransform: 'uppercase' }}
             >
               Volver a la Barra
             </button>
           </div>
           
-          <div className="grid grid-cols-1 gap-3 overflow-y-auto max-h-[75vh] pr-1">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto', flex: 1 }}>
             {STOCK_PRODUCTOS[categoriaAbierta]?.map((prod, idx) => (
               <div 
                 key={idx} 
-                className="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800 flex justify-between items-center"
+                style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#18181b', p: '16px', padding: '16px', borderRadius: '14px', border: '1px solid #27272a' }}
               >
-                <div className="flex flex-col gap-0.5">
-                  <p className="font-bold text-sm text-zinc-200">{prod.nombre}</p>
-                  <p className="font-extrabold text-emerald-400 text-sm">${prod.precio}</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <p style={{ fontWeight: 'bold', fontSize: '14px', color: '#e4e4e7', margin: 0 }}>{prod.nombre}</p>
+                  <p style={{ fontWeight: '800', fontSize: '14px', color: '#10b981', margin: 0 }}>${prod.precio}</p>
                 </div>
                 <button 
                   onClick={() => manejarAgregarAlCarrito(prod.nombre, prod.precio)}
-                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-xl font-black uppercase tracking-wider transition-colors cursor-pointer"
+                  style={{ backgroundColor: '#dc2626', color: 'white', fontSize: '12px', padding: '8px 14px', borderRadius: '10px', fontWeight: '900', border: 'none', cursor: 'pointer', textTransform: 'uppercase' }}
                 >
                   + Agregar
                 </button>
