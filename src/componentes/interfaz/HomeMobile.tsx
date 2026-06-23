@@ -71,23 +71,29 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
   const manejarVaciarCarrito = () => setCarrito([]);
 
   return (
-    <div className="w-full min-h-screen bg-[#09090b] flex justify-center items-center p-0 m-0 overflow-hidden font-sans select-none">
-      <div className="relative w-full h-full flex justify-center items-center">
+    // Contenedor padre que centra el "teléfono" simulado en la pantalla
+    <div className="w-full min-h-screen bg-[#09090b] flex justify-center items-center p-4 overflow-hidden font-sans select-none">
+      
+      {/* 📱 CAJA CON TAMAÑO REAL DE CELULAR */}
+      <div className="relative w-full max-w-[410px] h-[88vh] max-h-[850px] bg-black rounded-[40px] shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-zinc-800 overflow-hidden flex justify-center items-center">
+        
         <CuadriculaHeladeras 
           onSeleccionarCategoria={(cat) => cambiarCategoria(cat)}
           onAbrirCheckout={() => setCheckoutAbierto(true)}
         />
+
+        {/* El flujo de pago se renderiza acoplado al contenedor del celu */}
+        <CarritoMobile 
+          isOpen={checkoutAbierto}
+          onClose={() => setCheckoutAbierto(false)}
+          cartItems={carrito}
+          onVaciarCarrito={manejarVaciarCarrito}
+        />
       </div>
 
-      <CarritoMobile 
-        isOpen={checkoutAbierto}
-        onClose={() => setCheckoutAbierto(false)}
-        cartItems={carrito}
-        onVaciarCarrito={manejarVaciarCarrito}
-      />
-
+      {/* CATÁLOGO MODAL (Queda flotando a pantalla completa para cómoda lectura) */}
       {categoriaAbierta && (
-        <div className="fixed inset-0 z-40 bg-black/95 backdrop-blur-md p-6 flex flex-col justify-start text-white animate-slide-up">
+        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md p-6 flex flex-col justify-start text-white">
           <div className="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
             <div className="flex flex-col">
               <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Catálogo Disponible</span>
@@ -97,17 +103,17 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
             </div>
             <button 
               onClick={() => cambiarCategoria(null)} 
-              className="bg-zinc-900 border border-zinc-800 px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-zinc-800 transition-colors uppercase tracking-wide"
+              className="bg-zinc-900 border border-zinc-800 text-zinc-200 px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-zinc-800 transition-colors uppercase tracking-wide cursor-pointer"
             >
               Volver a la Barra
             </button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 overflow-y-auto max-h-[75vh] pr-1">
+          <div className="grid grid-cols-1 gap-3 overflow-y-auto max-h-[75vh] pr-1">
             {STOCK_PRODUCTOS[categoriaAbierta]?.map((prod, idx) => (
               <div 
                 key={idx} 
-                className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800/80 flex justify-between items-center hover:border-zinc-700 transition-all"
+                className="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800 flex justify-between items-center"
               >
                 <div className="flex flex-col gap-0.5">
                   <p className="font-bold text-sm text-zinc-200">{prod.nombre}</p>
@@ -115,7 +121,7 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
                 </div>
                 <button 
                   onClick={() => manejarAgregarAlCarrito(prod.nombre, prod.precio)}
-                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-3.5 py-2 rounded-xl font-black uppercase tracking-wider transition-colors shadow-[0_0_10px_rgba(220,38,38,0.15)]"
+                  className="bg-red-600 hover:bg-red-700 text-white text-xs px-4 py-2 rounded-xl font-black uppercase tracking-wider transition-colors cursor-pointer"
                 >
                   + Agregar
                 </button>
