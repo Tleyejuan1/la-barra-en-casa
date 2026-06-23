@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCarrito } from '../../app/carrito/ContextoCarrito';
 import { WHATSAPP_CONFIG } from '../../config/shop';
 
 export default function Conservadora() {
   const [minimizado, setMinimizado] = useState(false);
-  // ESTADO PARA PASAR DE LA VISTA DEL CARRITO AL FORMULARIO DE CHECKOUT
   const [checkoutAbierto, setCheckoutAbierto] = useState(false);
+  const [esMobile, setEsMobile] = useState(false);
 
   // ESTADOS PARA LOS DATOS DEL CLIENTE
   const [nombre, setNombre] = useState('');
@@ -18,6 +18,18 @@ export default function Conservadora() {
   const contexto = useCarrito() as any;
   const items = contexto?.items || contexto?.carrito || [];
   
+  // Detección de pantalla para el diseño responsivo en celulares
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768;
+      setEsMobile(mobile);
+      if (mobile) setMinimizado(true); // Arranca cerrado en celu para no estorbar la vista de entrada
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const calcularTotal = contexto?.calcularTotal || contexto?.obtenerTotal || (() => {
     return items.reduce((acc: number, item: any) => acc + ((item.precio || 0) * (item.cantidad || 1)), 0);
   });
@@ -25,7 +37,6 @@ export default function Conservadora() {
   const eliminarDelCarrito = contexto?.eliminarDelCarrito || contexto?.eliminarItem || (() => {});
   const vaciarCarrito = contexto?.vaciarCarrito || contexto?.limpiarCarrito || (() => {});
 
-  // FUNCIÓN FINAL: ARMA EL MENSAJE CON LOS DATOS COMPLETOS Y ABRE WHATSAPP
   const enviarPedidoCompletoWhatsApp = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -69,19 +80,24 @@ export default function Conservadora() {
     <div 
       onClick={() => minimizado && setMinimizado(false)}
       style={{
-        backgroundColor: 'rgba(6, 9, 19, 0.95)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(6, 182, 212, 0.15)',
-        borderRadius: '20px',
-        padding: '20px',
-        width: '320px',
+        backgroundColor: 'rgba(6, 9, 19, 0.98)',
+        backdropFilter: 'blur(16px)',
+        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        borderLeft: esMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+        borderRight: esMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: esMobile ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+        boxShadow: '0 -10px 40px rgba(0,0,0,0.6), 0 0 30px rgba(6, 182, 212, 0.1)',
+        borderRadius: esMobile ? '24px 24px 0 0' : '20px',
+        padding: '16px 20px',
+        width: esMobile ? '100vw' : '320px',
         color: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        gap: '16px',
+        gap: '14px',
         cursor: minimizado ? 'pointer' : 'default',
-        transform: minimizado ? 'translateY(calc(100% - 55px))' : 'translateY(0)',
+        transform: minimizado 
+          ? `translateY(calc(100% - ${esMobile ? '60px' : '55px'}))` 
+          : 'translateY(0)',
         transition: 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)',
         userSelect: 'none'
       }}
@@ -94,19 +110,19 @@ export default function Conservadora() {
         }}
         style={{ 
           display: 'flex', 
-          justifyContent: 'space-between', 
+          justifyContent: 'space-between', // <--- FIX COMPILACIÓN 1
           alignItems: 'center', 
-          borderBottom: '1px solid rgba(255,255,255,0.05)', 
-          paddingBottom: '10px',
+          borderBottom: minimizado ? 'none' : '1px solid rgba(255,255,255,0.05)', 
+          paddingBottom: minimizado ? '0px' : '10px',
           cursor: 'pointer'
         }}
       >
-        <h3 style={{ margin: 0, fontSize: '14px', fontWeight: '900', letterSpacing: '1px', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          🛒 LA CONSERVADORA {minimizado ? '👇' : '👆'}
+        <h3 style={{ margin: 0, fontSize: '13px', fontWeight: '900', letterSpacing: '1px', color: '#06b6d4', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          🛒 LA CONSERVADORA {minimizado ? '👆' : '👇'}
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontSize: '11px', backgroundColor: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>
-            {totalItems} ítems
+          <span style={{ fontSize: '11px', backgroundColor: 'rgba(6, 182, 212, 0.2)', color: '#06b6d4', padding: '2px 8px', borderRadius: '20px', fontWeight: 'bold' }}>
+            {totalItems} ítems - ${calcularTotal().toLocaleString()}
           </span>
           <span style={{ fontSize: '10px', color: '#64748b' }}>
             {minimizado ? '[Abrir]' : '[Bajar]'}
@@ -122,22 +138,21 @@ export default function Conservadora() {
         opacity: minimizado ? 0 : 1,
         visibility: minimizado ? 'hidden' : 'visible',
         transition: 'opacity 0.2s ease',
-        maxHeight: minimizado ? '0px' : 'none',
-        overflow: 'hidden'
+        maxHeight: minimizado ? '0px' : (esMobile ? '60vh' : 'none'),
+        overflowY: esMobile ? 'auto' : 'visible'
       }}>
         
-        {/* EN CASO DE QUE NO ESTÉ EN EL CHECKOUT: MUESTRA EL CARRITO NORMAL */}
+        {/* EN CASO DE QUE NO ESTÉ EN EL CHECKOUT */}
         {!checkoutAbierto ? (
           <>
-            {/* Lista de productos agregados */}
-            <div style={{ maxHeight: '180px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingRight: '4px' }}>
+            <div style={{ maxHeight: '160px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', paddingRight: '4px' }}>
               {items.length === 0 ? (
                 <p style={{ fontSize: '12px', color: '#64748b', textAlign: 'center', margin: '20px 0' }}>La conservadora está vacía. ¡Meté frío!</p>
               ) : (
                 items.map((item: any) => (
                   <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.02)', padding: '8px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.04)' }}>
-                    <div>
-                      <h4 style={{ margin: 0, fontSize: '12px', fontWeight: '600' }}>{item.nombre || item.titulo}</h4>
+                    <div style={{ maxWidth: '70%' }}>
+                      <h4 style={{ margin: 0, fontSize: '12px', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.nombre || item.titulo}</h4>
                       <p style={{ margin: 0, fontSize: '10px', color: '#64748b' }}>{item.cantidad}x ${item.precio}</p>
                     </div>
                     
@@ -192,10 +207,10 @@ export default function Conservadora() {
             </button>
           </>
         ) : (
-          /* VISTA DEL FORMULARIO DE ENVÍO / DATOS */
+          /* VISTA DEL FORMULARIO DE CHECKOUT */
           <form onSubmit={enviarPedidoCompletoWhatsApp} onClick={(e) => e.stopPropagation()} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}> {/* <--- FIX COMPILACIÓN 2 */}
               <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 'bold' }}>DATOS DE ENTREGA</span>
               <span 
                 onClick={() => setCheckoutAbierto(false)} 
