@@ -9,8 +9,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
   onSeleccionarCategoria,
   onAbrirCheckout,
 }) => {
-    const manejarErrorImagen = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    // Corrección estricta de tipos para TypeScript
+  const manejarErrorImagen = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const elementoImg = e.currentTarget as HTMLImageElement;
     if (!elementoImg.src.endsWith('.png')) {
       elementoImg.src = '/assets/barra-mobile.png';
@@ -32,7 +31,6 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         border: '1px solid #27272a'
       }}
     >
-      {/* 📸 Imagen de fondo adaptada */}
       <img 
         src="/assets/barra-mobile.jpg" 
         alt="La Barra En Casa" 
@@ -48,122 +46,84 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         onError={manejarErrorImagen}
       />
 
-      {/* --- BOTONES INVISIBLES GRANDES PARA EL TACTO (ZONA MEDIA) --- */}
+      {/* --- 🥤 HELADERAS SUPERIORES (UN TOQUE MÁS ABAJO) --- */}
       
-      {/* Vitrina de Cigarrillos (Izquierda mostrador) */}
-      <button
-        onClick={() => onSeleccionarCategoria('cigarrillos')}
-        style={{ 
-          position: 'absolute', 
-          top: '45%', 
-          left: '2%', 
-          width: '35%', 
-          height: '16%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
-        }}
-        aria-label="Ver Cigarrillos"
-      />
-
-      {/* Caja Registradora "PAGAR" (Derecha mostrador) */}
-      <button
-        onClick={onAbrirCheckout}
-        style={{ 
-          position: 'absolute', 
-          top: '43%', 
-          right: '2%', 
-          width: '40%', 
-          height: '18%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
-        }}
-        aria-label="Ir al Checkout"
-      />
-
-      {/* --- FILA DE HELADERAS INFERIORES (SÚPER AMPLIADAS) --- */}
-      {/* Distribuidas a lo ancho para que ocupen todo el espacio inferior de la barra */}
-
-      {/* Heladera 1: ALCOHOL */}
-      <button
-        onClick={() => onSeleccionarCategoria('alcohol')}
-        style={{ 
-          position: 'absolute', 
-          bottom: '2%', 
-          left: '2%', 
-          width: '18%', 
-          height: '32%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
-        }}
-        aria-label="Ver Heladera Alcohol"
-      />
-
-      {/* Heladera 2: SIN ALCOHOL (Nueva) */}
+      {/* Sin Alcohol (Arriba Izquierda) */}
       <button
         onClick={() => onSeleccionarCategoria('sin-alcohol')}
         style={{ 
-          position: 'absolute', 
-          bottom: '2%', 
-          left: '21%', 
-          width: '18%', 
-          height: '32%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
+          position: 'absolute', top: '2%', left: '3%', width: '46%', height: '49%', 
+          backgroundColor: 'rgba(0, 255, 255, 0.25)', border: '2px solid cyan', cursor: 'pointer', zIndex: 10 
         }}
         aria-label="Ver Heladera Sin Alcohol"
-      />
+      >SIN ALCOHOL</button>
 
-      {/* Heladera 3: COMBOS */}
-      <button
-        onClick={() => onSeleccionarCategoria('combos')}
-        style={{ 
-          position: 'absolute', 
-          bottom: '2%', 
-          left: '41%', 
-          width: '18%', 
-          height: '32%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
-        }}
-        aria-label="Ver Heladera Combos"
-      />
-
-      {/* Heladera 4: BAJÓN / COMIDA (Nueva) */}
+      {/* Bajón (Arriba Derecha) */}
       <button
         onClick={() => onSeleccionarCategoria('bajon')}
         style={{ 
-          position: 'absolute', 
-          bottom: '2%', 
-          left: '61%', 
-          width: '18%', 
-          height: '32%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
+          position: 'absolute', top: '2%', right: '3%', width: '46%', height: '49%', 
+          backgroundColor: 'rgba(234, 179, 8, 0.25)', border: '2px solid #eab308', cursor: 'pointer', zIndex: 10 
         }}
         aria-label="Ver Heladera Bajón"
-      />
+      >BAJÓN</button>
 
-      {/* Heladera 5: APERITIVOS */}
+
+      {/* --- 🚬 ELEMENTOS DEL MOSTRADOR (RECALIBRADOS) --- */}
+      
+      {/* Cigarrillos */}
+      <button
+        onClick={() => onSeleccionarCategoria('cigarrillos')}
+        style={{ 
+          position: 'absolute', top: '53%', left: '2%', width: '35%', height: '14%', 
+          backgroundColor: 'rgba(255, 0, 0, 0.25)', border: '2px solid red', cursor: 'pointer', zIndex: 10 
+        }}
+        aria-label="Ver Cigarrillos"
+      >CIGARROS</button>
+
+      {/* Pagar / Caja Registradora */}
+      <button
+        onClick={onAbrirCheckout}
+        style={{ 
+          position: 'absolute', top: '51%', right: '3%', width: '39%', height: '16%', 
+          backgroundColor: 'rgba(0, 255, 0, 0.25)', border: '2px solid green', cursor: 'pointer', zIndex: 10 
+        }}
+        aria-label="Ir al Checkout"
+      >PAGAR</button>
+
+
+      {/* --- 🍾 FILA INFERIOR DE HELADERAS (UNIFICADAS AL 30% DE ANCHO CADA UNA) --- */}
+
+      {/* Alcohol (Izquierda) */}
+      <button
+        onClick={() => onSeleccionarCategoria('alcohol')}
+        style={{ 
+          position: 'absolute', top: '68%', left: '3%', width: '30%', height: '31%', 
+          backgroundColor: 'rgba(0, 0, 255, 0.25)', border: '2px solid blue', cursor: 'pointer', zIndex: 10 
+        }}
+        aria-label="Ver Heladera Alcohol"
+      >ALCOHOL</button>
+
+      {/* Combos (Centro exacto al 35% de left para no pisarse) */}
+      <button
+        onClick={() => onSeleccionarCategoria('combos')}
+        style={{ 
+          position: 'absolute', top: '68%', left: '35%', width: '30%', height: '31%', 
+          backgroundColor: 'rgba(255, 0, 255, 0.25)', border: '2px solid magenta', cursor: 'pointer', zIndex: 10 
+        }}
+        aria-label="Ver Heladera Combos"
+      >COMBOS</button>
+
+      {/* Aperitivos (Derecha) */}
       <button
         onClick={() => onSeleccionarCategoria('aperitivos')}
         style={{ 
-          position: 'absolute', 
-          bottom: '2%', 
-          right: '2%', 
-          width: '18%', 
-          height: '32%', 
-          opacity: 0, 
-          cursor: 'pointer', 
-          zIndex: 10 
+          position: 'absolute', top: '68%', right: '3%', width: '30%', height: '31%', 
+          backgroundColor: 'rgba(255, 128, 0, 0.25)', border: '2px solid orange', cursor: 'pointer', zIndex: 10 
         }}
         aria-label="Ver Heladera Aperitivos"
-      />
+      >APERITIVOS</button>
+
     </div>
   );
 };
