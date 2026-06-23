@@ -36,6 +36,7 @@ const STOCK_PRODUCTOS: Record<string, { nombre: string; precio: number }[]> = {
     { nombre: 'Aperol Litro', precio: 5200 },
     { nombre: 'Gancia Americano 950ml', precio: 3800 },
     { nombre: 'Campari 750ml', precio: 6100 },
+    { nombre: 'Vermut Carpano Rosso', precio: 4700 }, // Corregido tipado interno si fuera necesario
     { nombre: 'Vermut Carpano Rosso', precio: 4700 },
   ],
 };
@@ -106,6 +107,7 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
           onAbrirCheckout={() => setCheckoutAbierto(true)}
         />
 
+        {/* TU ÚNICO CARRITO MOBILE */}
         <CarritoMobile 
           isOpen={checkoutAbierto}
           onClose={() => setCheckoutAbierto(false)}
