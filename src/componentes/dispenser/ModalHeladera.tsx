@@ -2,10 +2,8 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import Estante from './Estante';
-import ProductoItem from './ProductoItem';
 import Heladera from './Heladera';
-import { Producto } from '../../datos/productos'; // Ajustá la ruta si es necesario
+import { Producto } from '../../datos/productos'; 
 
 interface ModalHeladeraProps {
   heladeraAbierta: string;
@@ -16,6 +14,10 @@ interface ModalHeladeraProps {
   neones: Record<string, string>;
 }
 
+const fondosHeladera: Record<string, string> = {
+  'sin-alcohol': '/assets/heladera-sin-alcohol.jpg',
+};
+
 export const ModalHeladera: React.FC<ModalHeladeraProps> = ({
   heladeraAbierta,
   onCerrar,
@@ -24,9 +26,7 @@ export const ModalHeladera: React.FC<ModalHeladeraProps> = ({
   titulos,
   neones,
 }) => {
-  const estante1 = productosFiltrados.filter(p => p.estante === 1);
-  const estante2 = productosFiltrados.filter(p => p.estante === 2);
-  const estante3 = productosFiltrados.filter(p => p.estante === 3);
+  const fondoActual = fondosHeladera[heladeraAbierta] || '/assets/interior-heladera.jpg';
 
   return (
     <motion.div
@@ -46,7 +46,6 @@ export const ModalHeladera: React.FC<ModalHeladeraProps> = ({
         justifyContent: 'center',
       }}
     >
-      {/* Fondo clickeable para cerrar */}
       <div onClick={onCerrar} style={{ position: 'absolute', inset: 0, zIndex: 110 }} />
 
       <motion.div
@@ -58,60 +57,78 @@ export const ModalHeladera: React.FC<ModalHeladeraProps> = ({
           position: 'relative',
           width: esMobile ? '92%' : '460px',
           height: esMobile ? '85vh' : '82vh',
-          backgroundColor: '#060913',
           borderRadius: '24px',
           border: '2px solid rgba(255, 255, 255, 0.08)',
           padding: esMobile ? '16px' : '24px',
-          boxShadow: `0 0 40px ${neones[heladeraAbierta] || 'rgba(6, 182, 212, 0.5)'}`,
+          boxShadow: `0 0 50px ${neones[heladeraAbierta] || 'rgba(6, 182, 212, 0.5)'}`,
           zIndex: 120,
           display: 'flex',
           flexDirection: 'column',
+          overflow: 'hidden',
+          backgroundImage: `url("${fondoActual}")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
-        <button
-          onClick={onCerrar}
+        {/* Capa de Tinte + Brillo de Neón */}
+        <div 
           style={{
             position: 'absolute',
-            top: '16px',
-            right: '16px',
-            background: 'rgba(255,255,255,0.05)',
-            border: 'none',
-            color: '#64748b',
-            width: '32px',
-            height: '32px',
-            borderRadius: '50%',
-            cursor: 'pointer',
-            zIndex: 150,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            inset: 0,
+            backgroundColor: 'rgba(5, 7, 15, 0.45)',
+            backdropFilter: 'blur(1px)',
+            boxShadow: `inset 0 0 60px ${neones[heladeraAbierta] || 'rgba(6, 182, 212, 0.3)'}`,
+            zIndex: 1,
+            pointerEvents: 'none'
           }}
-        >
-          ✕
-        </button>
+        />
 
-        <h2
-          style={{
-            textAlign: 'center',
-            fontSize: esMobile ? '20px' : '24px',
-            fontWeight: '900',
-            color: '#fff',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            margin: '0 0 16px 0',
-            textShadow: `0 0 12px ${neones[heladeraAbierta] || 'rgba(6, 182, 212, 0.5)'}`,
-          }}
-        >
-          {titulos[heladeraAbierta] || 'PRODUCTOS'}
-        </h2>
+        {/* --- CONTENIDO --- */}
+        <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
+          
+          <button
+            onClick={onCerrar}
+            style={{
+              position: 'absolute',
+              top: '0px',
+              right: '0px',
+              background: 'rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(4px)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#fff',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              zIndex: 150,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            ✕
+          </button>
 
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '14px', overflowY: 'auto', paddingRight: '4px' }}>
-          <Estante numero={3}>{estante3.map(p => <ProductoItem key={p.id} producto={p} />)}</Estante>
-          <Estante numero={2}>{estante2.map(p => <ProductoItem key={p.id} producto={p} />)}</Estante>
-          <Estante numero={1}>{estante1.map(p => <ProductoItem key={p.id} producto={p} />)}</Estante>
+          <h2
+            style={{
+              textAlign: 'center',
+              fontSize: esMobile ? '22px' : '26px',
+              fontWeight: '950',
+              color: '#fff',
+              letterSpacing: '3px',
+              textTransform: 'uppercase',
+              margin: '0 0 20px 0',
+              textShadow: `0 0 15px ${neones[heladeraAbierta] || 'rgba(6, 182, 212, 0.5)'}`,
+            }}
+          >
+            {titulos[heladeraAbierta] || 'PRODUCTOS'}
+          </h2>
+
+          {/* 🧹 Contenedor vacío para apreciar la imagen al 100% */}
+          <div style={{ flex: 1 }} />
+
+          <Heladera tipo={heladeraAbierta} />
         </div>
-
-        <Heladera tipo={heladeraAbierta} />
       </motion.div>
     </motion.div>
   );
