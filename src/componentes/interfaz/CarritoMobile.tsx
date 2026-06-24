@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { WHATSAPP_CONFIG } from '../../config/shop'; // <-- Ajustado a la ruta real de tu captura
 
 interface CartItem {
   nombre: string;
@@ -32,7 +33,32 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
   const total = cartItems.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
 
   const manejarFinalizarPedido = () => {
-    alert(`¡Pedido Confirmado!\n\nCliente: ${nombreUsuario}\nModo: ${tipoEntrega === 'envio' ? 'Envío a ' + direccion : 'Retiro en el local'}\nPaga con: ${conCuantoPaga}\nTotal: $${total}`);
+    // 1. Armamos el mensaje usando el texto base que tenés en shop.ts
+    let mensaje = `${WHATSAPP_CONFIG.mensajeInicial}\n\n`;
+    mensaje += `*👤 Cliente:* ${nombreUsuario}\n`;
+    mensaje += `*🛵 Modo:* ${tipoEntrega === 'envio' ? '📦 Envío a domicilio' : '🏪 Retiro en el local'}\n`;
+    
+    if (tipoEntrega === 'envio') {
+      mensaje += `*📍 Dirección:* ${direccion}\n`;
+    }
+    
+    mensaje += `*💵 Abona con:* ${conCuantoPaga}\n\n`;
+    mensaje += `*📝 DETALLE DEL PEDIDO:*\n`;
+
+    cartItems.forEach((item) => {
+      mensaje += `• ${item.nombre} (x${item.cantidad}) -> *$${item.precio * item.cantidad}*\n`;
+    });
+
+    mensaje += `\n*💰 TOTAL A PAGAR: $${total}*`;
+
+    // 2. Codificamos la URL apuntando a WHATSAPP_CONFIG.numero
+    const mensajeCodificado = encodeURIComponent(mensaje);
+    const urlWhatsApp = `https://wa.me/${WHATSAPP_CONFIG.numero}?text=${mensajeCodificado}`;
+
+    // 3. Abrir la API de WhatsApp
+    window.open(urlWhatsApp, '_blank');
+
+    // 4. Resetear estados y cerrar checkout
     onVaciarCarrito();
     setPaso(1);
     setNombreUsuario('');
@@ -56,10 +82,10 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
         boxSizing: 'border-box'
       }}
     >
-      {/* 📦 CUADRO FLOTANTE QUE OCUPA BASTANTE PANTALLA */}
       <div 
         style={{
           width: '100%',
+          maxWidth: '430px',
           backgroundColor: '#121214',
           borderRadius: '24px',
           border: '1px solid #27272a',
@@ -104,23 +130,17 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
               )}
             </div>
 
-            {/* Selector de opciones: Envío o Retiro */}
+            {/* Selector de opciones */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Opciones de entrega:</span>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button
                   onClick={() => setTipoEntrega('envio')}
                   style={{
-                    flex: 1,
-                    padding: '12px',
-                    borderRadius: '12px',
-                    fontWeight: 'bold',
-                    fontSize: '13px',
-                    cursor: 'pointer',
+                    flex: 1, padding: '12px', borderRadius: '12px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer',
                     border: tipoEntrega === 'envio' ? '2px solid #dc2626' : '1px solid #27272a',
                     backgroundColor: tipoEntrega === 'envio' ? 'rgba(220, 38, 38, 0.1)' : '#18181b',
-                    color: tipoEntrega === 'envio' ? '#ffffff' : '#a1a1aa',
-                    transition: 'all 0.2s'
+                    color: tipoEntrega === 'envio' ? '#ffffff' : '#a1a1aa', transition: 'all 0.2s'
                   }}
                 >
                   📍 Envío
@@ -128,16 +148,10 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
                 <button
                   onClick={() => setTipoEntrega('retiro')}
                   style={{
-                    flex: 1,
-                    padding: '12px',
-                    borderRadius: '12px',
-                    fontWeight: 'bold',
-                    fontSize: '13px',
-                    cursor: 'pointer',
+                    flex: 1, padding: '12px', borderRadius: '12px', fontWeight: 'bold', fontSize: '13px', cursor: 'pointer',
                     border: tipoEntrega === 'retiro' ? '2px solid #dc2626' : '1px solid #27272a',
                     backgroundColor: tipoEntrega === 'retiro' ? 'rgba(220, 38, 38, 0.1)' : '#18181b',
-                    color: tipoEntrega === 'retiro' ? '#ffffff' : '#a1a1aa',
-                    transition: 'all 0.2s'
+                    color: tipoEntrega === 'retiro' ? '#ffffff' : '#a1a1aa', transition: 'all 0.2s'
                   }}
                 >
                   🏪 Retiro en Local
@@ -160,48 +174,38 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
           </div>
         )}
 
-        {/* PASO 2: FORMULARIO STRING */}
+        {/* PASO 2: FORMULARIO */}
         {paso === 2 && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Input Nombre */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Nombre y Apellido</label>
               <input 
-                type="text" 
-                placeholder="Ej: Juan Cruz" 
-                value={nombreUsuario}
+                type="text" placeholder="Ej: Juan Cruz" value={nombreUsuario}
                 onChange={(e) => setNombreUsuario(e.target.value)}
                 style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
               />
             </div>
 
-            {/* Input Dirección Condicional (solo si es Envío) */}
             {tipoEntrega === 'envio' && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>Dirección de Envío</label>
                 <input 
-                  type="text" 
-                  placeholder="Ej: Av. Colón 1234, Barrio Centro" 
-                  value={direccion}
+                  type="text" placeholder="Ej: Av. Colón 1234, Barrio Centro" value={direccion}
                   onChange={(e) => setDireccion(e.target.value)}
                   style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
                 />
               </div>
             )}
 
-            {/* Input Con cuánto paga */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <label style={{ fontSize: '12px', color: '#a1a1aa', fontWeight: 'bold', textTransform: 'uppercase' }}>¿Con cuánto vas a pagar?</label>
               <input 
-                type="text" 
-                placeholder="Ej: Pago con $15000 o Mercado Pago" 
-                value={conCuantoPaga}
+                type="text" placeholder="Ej: Pago con $15000 o Mercado Pago" value={conCuantoPaga}
                 onChange={(e) => setConCuantoPaga(e.target.value)}
                 style={{ width: '100%', backgroundColor: '#18181b', border: '1px solid #27272a', borderRadius: '12px', padding: '12px', color: 'white', fontSize: '14px', boxSizing: 'border-box', outline: 'none' }}
               />
             </div>
 
-            {/* Acciones del Paso 2 */}
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
               <button 
                 onClick={() => setPaso(1)}
@@ -213,15 +217,7 @@ export const CarritoMobile: React.FC<CarritoMobileProps> = ({
                 disabled={!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()}
                 onClick={manejarFinalizarPedido}
                 style={{ 
-                  flex: 2, 
-                  backgroundColor: '#10b981', 
-                  border: 'none', 
-                  color: 'black', 
-                  padding: '14px', 
-                  borderRadius: '12px', 
-                  fontWeight: '900', 
-                  fontSize: '14px', 
-                  textTransform: 'uppercase',
+                  flex: 2, backgroundColor: '#10b981', border: 'none', color: 'black', padding: '14px', borderRadius: '12px', fontWeight: '900', fontSize: '14px', textTransform: 'uppercase',
                   cursor: (!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()) ? 'not-allowed' : 'pointer',
                   opacity: (!nombreUsuario.trim() || (tipoEntrega === 'envio' && !direccion.trim()) || !conCuantoPaga.trim()) ? 0.5 : 1
                 }}
