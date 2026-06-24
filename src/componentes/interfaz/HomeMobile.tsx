@@ -1,12 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
 import { CuadriculaHeladeras } from './CuadriculaHeladeras';
 import { CarritoMobile } from './CarritoMobile';
-
-interface CartItem {
-  nombre: string;
-  precio: number;
-  cantidad: number;
-}
+import { useCarrito } from '../../app/carrito/ContextoCarrito';
 
 interface HomeMobileProps {
   setHeladeraAbierta?: (valor: string | null) => void;
@@ -21,7 +18,9 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
 }) => {
   const [categoriaAbierta, setCategoriaAbierta] = useState<string | null>(null);
   const [checkoutAbierto, setCheckoutAbierto] = useState(false);
-  const [carrito, setCarrito] = useState<CartItem[]>([]);
+  
+  // ⚡ CONSUMO DEL MOTOR GLOBAL: Traemos el estado real del carrito y la acción de vaciar
+  const { carrito, vaciarCarrito } = useCarrito();
 
   const cambiarCategoria = (cat: string | null) => {
     setCategoriaAbierta(cat);
@@ -30,20 +29,12 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
     }
   };
 
-  // 🛒 Función esencial para sumar artículos y acumular precios en tu carrito original
-  const manejarAgregarAlCarrito = (nombre: string, precio: number) => {
-    setCarrito((prevCarrito) => {
-      const existe = prevCarrito.find((item) => item.nombre === nombre);
-      if (existe) {
-        return prevCarrito.map((item) =>
-          item.nombre === nombre ? { ...item, cantidad: item.cantidad + 1 } : item
-        );
-      }
-      return [...prevCarrito, { nombre, precio, cantidad: 1 }];
-    });
-  };
-
-  const manejarVaciarCarrito = () => setCarrito([]);
+  // Mapeamos los datos globales al formato simplificado que espera tu componente CarritoMobile
+  const itemsAdaptados = carrito.map((item) => ({
+    nombre: `${item.nombre} (${item.medida})`, // Ej: "Fernet Branca (750ml)"
+    precio: item.precio,
+    cantidad: item.cantidad
+  }));
 
   return (
     <div 
@@ -76,20 +67,18 @@ export const HomeMobile: React.FC<HomeMobileProps> = ({
           marginTop: '10px'
         }}
       >
-        {/* Tu barra original con los enlaces de interacción vinculados */}
+        {/* Tu barra con los botones invisibles calibrados */}
         <CuadriculaHeladeras 
           onSeleccionarCategoria={(cat) => cambiarCategoria(cat)}
           onAbrirCheckout={() => setCheckoutAbierto(true)}
-          // @ts-ignore (Agregalo si tu interfaz de CuadriculaProps todavía no espera esta prop)
-          onAgregarAlCarrito={manejarAgregarAlCarrito}
         />
 
-        {/* Tu carrito mobile original */}
+        {/* Tu carrito mobile conectado directamente al estado global reactivo */}
         <CarritoMobile 
           isOpen={checkoutAbierto}
           onClose={() => setCheckoutAbierto(false)}
-          cartItems={carrito}
-          onVaciarCarrito={manejarVaciarCarrito}
+          cartItems={itemsAdaptados}
+          onVaciarCarrito={vaciarCarrito}
         />
       </div>
     </div>
