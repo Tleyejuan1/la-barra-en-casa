@@ -11,23 +11,27 @@ interface ProductoItemProps {
 export default function ProductoItem({ producto }: ProductoItemProps) {
   const { agregarProducto } = useCarrito();
 
-  // Centralizamos la función para asegurar ejecución instantánea
+  // Tomamos la primera variante por defecto para mostrar en la vidriera principal
+  const variantePredeterminada = producto.variantes[0];
+
   const handleAgregar = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation(); // Frena el procesamiento hacia la heladera/estante
-    agregarProducto(producto);
+    
+    // Mandamos el producto junto con su variante predeterminada al carrito
+    agregarProducto(producto, variantePredeterminada);
   };
 
   return (
     <div 
-      onClick={handleAgregar} // Ahora toda la tarjeta responde al click al instante
+      onClick={handleAgregar} // Toda la tarjeta responde al click al instante
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
         width: '100px',
-        transition: 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)', // Animación más fluida nocturna
+        transition: 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)', 
         cursor: 'pointer'
       }}
       className="group-item"
@@ -48,7 +52,7 @@ export default function ProductoItem({ producto }: ProductoItemProps) {
           overflow: 'hidden',
           marginBottom: '6px',
           boxShadow: '0 4px 10px rgba(0,0,0,0.4)',
-          pointerEvents: 'none' // Evita que la imagen intercepte el click del usuario
+          pointerEvents: 'none' 
         }}
       >
         <img 
@@ -81,6 +85,19 @@ export default function ProductoItem({ producto }: ProductoItemProps) {
         {producto.nombre}
       </span>
 
+      {/* MEDIDA PREDETERMINADA */}
+      <span
+        style={{
+          fontSize: '9px',
+          color: '#94a3b8',
+          fontWeight: '600',
+          pointerEvents: 'none'
+        }}
+      >
+        {variantePredeterminada?.medida}
+      </span>
+
+      {/* PRECIO CORREGIDO (Apuntando a la variante) */}
       <span 
         style={{
           fontSize: '12px',
@@ -90,7 +107,7 @@ export default function ProductoItem({ producto }: ProductoItemProps) {
           pointerEvents: 'none'
         }}
       >
-        ${producto.precio.toLocaleString('es-AR')}
+        ${variantePredeterminada ? variantePredeterminada.precio.toLocaleString('es-AR') : '0'}
       </span>
 
       {/* BOTÓN + AÑADIR */}
