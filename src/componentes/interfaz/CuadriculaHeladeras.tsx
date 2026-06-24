@@ -34,13 +34,13 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
       }}
     >
       {/* 🪄 Animación para el flotado suave del cartel indicador */}
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes flotarAyuda {
           0% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(-6px); }
+          50% { transform: translateX(-50%) translateY(-4px); }
           100% { transform: translateX(-50%) translateY(0); }
         }
-      `}</style>
+      `}} />
 
       <img 
         src="/assets/barra-mobile.jpg" 
@@ -57,7 +57,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         onError={manejarErrorImagen}
       />
 
-      {/* --- ℹ️ BOTÓN DEL TÍTULO (INVISIBLE + CARTELITO MÁS ARRIBA) --- */}
+      {/* --- ℹ️ BOTÓN DEL TÍTULO (INVISIBLE + CARTELITO ARRIBA DEL TODO) --- */}
       <button
         onClick={() => setMostrarAyuda(true)}
         style={{
@@ -74,11 +74,11 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         }}
         aria-label="Ver ayuda de funcionamiento"
       >
-        {/* 🏷️ CARTELITO FLOTANTE (Subido de bottom: 8px a 24px) */}
+        {/* 🏷️ CARTELITO FLOTANTE */}
         <div
           style={{
             position: 'absolute',
-            bottom: '24px', 
+            top: '12px',
             left: '50%',
             transform: 'translateX(-50%)',
             backgroundColor: '#06b6d4',
@@ -97,13 +97,11 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
             alignItems: 'center'
           }}
         >
-          💡 TOCÁ ACÁ PARA VER CÓMO FUNCIONA
+          💡 TOCÁ EL TÍTULO PARA VER CÓMO FUNCIONA
         </div>
       </button>
 
-      {/* --- 🥤 HELADERAS SUPERIORES (INVISIBLES) --- */}
-      
-      {/* Sin Alcohol */}
+      {/* --- 🥤 HELADERAS SUPERIORES --- */}
       <button
         onClick={() => onSeleccionarCategoria('sin-alcohol')}
         style={{ 
@@ -113,7 +111,6 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Heladera Sin Alcohol"
       />
 
-      {/* Bajón */}
       <button
         onClick={() => onSeleccionarCategoria('bajon')}
         style={{ 
@@ -123,10 +120,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Heladera Bajón"
       />
 
-
-      {/* --- 🚬 ELEMENTOS DEL MOSTRADOR (INVISIBLES) --- */}
-      
-      {/* Cigarrillos */}
+      {/* --- 🚬 ELEMENTOS DEL MOSTRADOR --- */}
       <button
         onClick={() => onSeleccionarCategoria('cigarrillos')}
         style={{ 
@@ -136,7 +130,6 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Cigarrillos"
       />
 
-      {/* Pagar / Caja Registradora */}
       <button
         onClick={onAbrirCheckout}
         style={{ 
@@ -146,10 +139,7 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ir al Checkout"
       />
 
-
-      {/* --- 🍾 FILA INFERIOR DE HELADERAS (INVISIBLES) --- */}
-
-      {/* Alcohol */}
+      {/* --- 🍾 FILA INFERIOR DE HELADERAS --- */}
       <button
         onClick={() => onSeleccionarCategoria('alcohol')}
         style={{ 
@@ -159,7 +149,6 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Heladera Alcohol"
       />
 
-      {/* Combos */}
       <button
         onClick={() => onSeleccionarCategoria('combos')}
         style={{ 
@@ -169,7 +158,6 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Heladera Combos"
       />
 
-      {/* Aperitivos */}
       <button
         onClick={() => onSeleccionarCategoria('aperitivos')}
         style={{ 
@@ -179,14 +167,14 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
         aria-label="Ver Heladera Aperitivos"
       />
 
-      {/* --- 📋 CARTELITO EMERGENTE DE AYUDA --- */}
+      {/* --- 📋 CARTELITO EMERGENTE DE AYUDA (PASO A PASO) --- */}
       {mostrarAyuda && (
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'rgba(5, 7, 15, 0.9)',
-            backdropFilter: 'blur(6px)',
+            backgroundColor: 'rgba(5, 7, 15, 0.92)',
+            backdropFilter: 'blur(8px)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -198,36 +186,58 @@ export const CuadriculaHeladeras: React.FC<CuadriculaProps> = ({
             style={{
               backgroundColor: '#0c0f1d',
               border: '2px solid rgba(6, 182, 212, 0.5)',
-              boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)',
-              borderRadius: '20px',
-              padding: '24px',
-              textAlign: 'center',
+              boxShadow: '0 0 25px rgba(6, 182, 212, 0.3)',
+              borderRadius: '24px',
+              padding: '28px 24px',
               color: 'white',
               maxWidth: '320px',
               width: '100%'
             }}
           >
-            <h3 style={{ margin: '0 0 12px 0', fontSize: '18px', fontWeight: '900', letterSpacing: '1px', color: '#06b6d4' }}>
-              🍻 ¿CÓMO FUNCIONA?
+            <h3 style={{ margin: '0 0 20px 0', fontSize: '18px', fontWeight: '900', letterSpacing: '1px', color: '#06b6d4', textAlign: 'center' }}>
+              🍻 PASOS PARA TU PEDIDO
             </h3>
-            <p style={{ margin: '0 0 20px 0', fontSize: '13px', color: '#94a3b8', lineHeight: '1.5' }}>
-              Esta es tu barra interactiva. Podés **tocar las heladeras** para abrirlas y elegir tus productos, interactuar con la **vitrina de cigarros** o tocar la **caja registradora** para abonar tu pedido.
-            </p>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', textAlign: 'left', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#06b6d4', color: '#05070f', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '12px', flexShrink: 0 }}>1</span>
+                <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', lineHeight: '1.4' }}>
+                  <strong>Tocá las heladeras o estantes</strong> para abrirlos y explorar las bebidas y snacks.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#06b6d4', color: '#05070f', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '12px', flexShrink: 0 }}>2</span>
+                <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', lineHeight: '1.4' }}>
+                  <strong>Elegí tus productos</strong> preferidos y agregalos al carrito de compras.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                <span style={{ background: '#06b6d4', color: '#05070f', borderRadius: '50%', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '900', fontSize: '12px', flexShrink: 0 }}>3</span>
+                <p style={{ margin: 0, fontSize: '13px', color: '#e2e8f0', lineHeight: '1.4' }}>
+                  Tocá la <strong>caja registradora (PAGAR)</strong> en el mostrador para finalizar tu pedido.
+                </p>
+              </div>
+            </div>
+
             <button
               onClick={() => setMostrarAyuda(false)}
               style={{
                 backgroundColor: '#06b6d4',
                 color: '#05070f',
                 border: 'none',
-                padding: '10px 24px',
+                padding: '12px 24px',
                 borderRadius: '12px',
-                fontWeight: 'bold',
+                fontWeight: '900',
                 fontSize: '13px',
                 cursor: 'pointer',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                width: '100%',
+                boxShadow: '0 4px 12px rgba(6, 182, 212, 0.2)'
               }}
             >
-              ¡Entendido!
+              ¡Entendido, a comprar!
             </button>
           </div>
         </div>
